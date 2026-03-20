@@ -208,6 +208,20 @@ Configuration:
 Observation:
 FIM operates on scheduled scans rather than real-time events.
 
+FIM now operating on realtime monitoring.
+
+<syscheck>
+  <disabled>no</disabled>
+  <frequency>43200</frequency>
+  <scan_on_start>yes</scan_on_start>
+  <directories realtime="yes">/etc</directories>
+  <directories realtime="yes">/usr/bin</directories>
+  <directories realtime="yes">/usr/sbin</directories>
+  <directories realtime="yes">/bin</directories>
+  <directories realtime="yes">/sbin</directories>
+  <directories realtime="yes">/boot</directories>
+</syscheck>
+
 ---
 
 # Key Concepts Learned
@@ -228,15 +242,61 @@ Indexed in OpenSearch
 ↓
 Visible in Dashboard
 
+# Key learning notes to add
+
+wazuh-analysisd -t did not provide useful output in this lab, so service restart plus observed alerts was the practical validation method.
+
+Simple XML mistakes in local_rules.xml can prevent the manager from starting.
+
+Correlation rules are stricter than simple match rules.
+
+Not every sudo-related event contains command text.
+
+Different activities may be better detected through different telemetry:
+
+auth logs
+
+sudo logs
+
+account management events
+
+FIM/syscheck
+
+For some detections, broad <match> worked more reliably than field-specific matching in this lab.
+
+visudo produced better signal through FIM than command-line matching.
+
+Realtime syscheck was required for immediate FIM learning feedback.
+
 ---
 
 # Next Learning Goals
 
 Build detections for:
 
-• SSH brute force attempts
-• Suspicious command execution
-• Reverse shell activity
-• File tampering
+Cron persistence detection
+
+Target paths:
+
+/etc/crontab
+
+/etc/cron.d/
+
+/var/spool/cron/
+
+This fits perfectly with the FIM work you already completed.
+
+After that:
+
+/etc/passwd or /etc/shadow tampering
+
+reverse shell detection
+
+suspicious download tooling
+
+/etc/sudoers.d/ monitoring
+
+
+
 
 The goal of this project is **learning detection engineering rather than building a production SOC.**
